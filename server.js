@@ -1,10 +1,13 @@
 var http = require('http');
 var qs = require('querystring');
 
+// The users already exist in the shard user's table
+// the SFDC org id is not required
+// token is used to identify the user from the call
 var users = [
-    {client_id: 340, token: "token3", user_fid: "005xx000001Sv6AAAT"},
+    {client_id: 1, token: "token2", user_fid: "005xx000001Sv6AAAR"},
     {client_id: 315, token: "token1", user_fid: "005xx000001Sv6AAAS"},
-    {client_id: 1, token: "token2", user_fid: "005xx000001Sv6AAAR"}
+    {client_id: 340, token: "token3", user_fid: "005xx000001Sv6AAAT"}
 ];
 
 const requestListener = function (request, res) {
@@ -22,7 +25,6 @@ const requestListener = function (request, res) {
 
         request.on('end', function () {
             var post = qs.parse(body);
-            // use post['blah'], etc.
             console.log('token: ' + post['token']);
             var user = users.find((u) => u.token == post['token']);
             console.log(user);
