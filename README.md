@@ -11,7 +11,5 @@ node server.js
 
 
 # TODO
-:::caution
 [ ] remove querystring 
-:::
 
