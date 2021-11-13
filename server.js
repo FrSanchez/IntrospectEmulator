@@ -20,9 +20,14 @@ const requestListener = function (request, res) {
             console.log('token: ' + post['token']);
             var user = users.find((u) => u.token == post['token']);
             console.log(user);
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            answer = JSON.stringify({active: true, client_id: user.client_id, scope: "pardot_api", sub: "https://login.salesforce.com/id/00Dxx0000001gEREAY/" + user.user_fid });
-            res.end(answer);
+            if (typeof(user) == 'undefined') {
+                res.writeHead(404, { 'Content-Type': 'application/json' });
+                res.end("");
+            } else {
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                answer = JSON.stringify({active: true, client_id: user.client_id, scope: "pardot_api", sub: "https://login.salesforce.com/id/00Dxx0000001gEREAY/" + user.user_fid });
+                res.end(answer);
+            }
         });
     }
 }
