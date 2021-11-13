@@ -1,14 +1,6 @@
 var http = require('http');
 var qs = require('querystring');
-
-// The users already exist in the shard user's table
-// the SFDC org id is not required
-// token is used to identify the user from the call
-var users = [
-    {client_id: 1, token: "token2", user_fid: "005xx000001Sv6AAAR"},
-    {client_id: 315, token: "token1", user_fid: "005xx000001Sv6AAAS"},
-    {client_id: 340, token: "token3", user_fid: "005xx000001Sv6AAAT"}
-];
+var fs = require('fs');
 
 const requestListener = function (request, res) {
     if (request.method == 'POST') {
@@ -35,5 +27,19 @@ const requestListener = function (request, res) {
     }
 }
 
+var usersPath = './users.json';
+function fsReadFileSynchToArray (filePath) {
+    var data = JSON.parse(fs.readFileSync(filePath));
+    console.log(data);
+    return data;
+}
+
+fs.watchFile(usersPath, (curr, prev) => {
+    console.log(`${usersPath} file Changed`);
+    users = fsReadFileSynchToArray(usersPath);
+  });
+
+var users = fsReadFileSynchToArray(usersPath);
 const server = http.createServer(requestListener);
 server.listen(8080);
+console.log("Started server in port 8080");
