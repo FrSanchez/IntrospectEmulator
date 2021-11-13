@@ -17,7 +17,7 @@ const requestListener = function (request, res) {
 
         request.on('end', function () {
             var post = qs.parse(body);
-            console.log('token: ' + post['token']);
+            console.log('Received token: ' + post['token']);
             var user = users.find((u) => u.token == post['token']);
             console.log(user);
             if (typeof(user) == 'undefined') {
@@ -25,7 +25,10 @@ const requestListener = function (request, res) {
                 res.end("");
             } else {
                 res.writeHead(200, { 'Content-Type': 'application/json' });
-                answer = JSON.stringify({active: true, client_id: user.client_id, scope: "pardot_api", sub: "https://login.salesforce.com/id/00Dxx0000001gEREAY/" + user.user_fid });
+                answer = JSON.stringify({active: true, 
+                    client_id: user.client_id, 
+                    scope: "pardot_api", 
+                    sub: "https://login.salesforce.com/id/00Dxx0000001gEREAY/" + user.user_fid });
                 res.end(answer);
             }
         });
@@ -40,7 +43,7 @@ function fsReadFileSynchToArray (filePath) {
 }
 
 fs.watchFile(usersPath, (curr, prev) => {
-    console.log(`${usersPath} file Changed`);
+    console.log("Updating list of users");
     users = fsReadFileSynchToArray(usersPath);
   });
 
