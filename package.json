@@ -1,5 +1,19 @@
 {
-    "name": "FakeIntrospect",
-    "version": "1.0.0",
-    "description": "A SFDC core introspect emulator"
+  "name": "fakeintrospect",
+  "version": "1.0.0",
+  "description": "A SFDC core introspect emulator",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.dev.pardot.com/francisco-sanchez/FakeIntrospect"
+  },
+  "keywords": [
+    "SFDC",
+    "introspect",
+    "oauth"
+  ],
+  "author": "Francisco Sanchez"
 }
