@@ -17,9 +17,9 @@ const requestListener = function (request, res) {
 
         request.on('end', function () {
             var post = qs.parse(body);
-            console.log('Received token: ' + post['token']);
+            console.log(today.toLocaleString() + ' Received token: ' + post['token']);
             var user = users.find((u) => u.token == post['token']);
-            console.log(user);
+            console.log(today.toLocaleString() + " " + JSON.stringify(user));
             if (typeof(user) == 'undefined') {
                 res.writeHead(404, { 'Content-Type': 'application/json' });
                 res.end("");
@@ -50,4 +50,5 @@ fs.watchFile(usersPath, (curr, prev) => {
 var users = fsReadFileSynchToArray(usersPath);
 const server = http.createServer(requestListener);
 server.listen(8080);
-console.log("Started server in port 8080");
+var today  = new Date();
+console.log(today.toLocaleString() + " Started server in port 8080");
