@@ -5,14 +5,13 @@ var usersPath = './users.json';
 //
 
 
-var http = require('http');
-var qs = require('querystring');
-var fs = require('fs');
+const http = require('http');
+const qs = require('querystring');
+const fs = require('fs');
+const log4js = require("log4js");
+const logger = log4js.getLogger();
 
-const log = function(data) {
-    var today  = new Date();
-    console.log(today.toLocaleString() + " " + data);
-}
+logger.level = 'debug';
 
 const requestListener = function (request, res) {
     if (request.method == 'POST') {
@@ -24,16 +23,16 @@ const requestListener = function (request, res) {
             // Too much POST data, kill the connection!
             // 1e6 === 1 * Math.pow(10, 6) === 1 * 1000000 ~~~ 1MB
             if (body.length > 1e6) {
-                log("Too much data, destryoing connection!");
+                logger.error("Too much data, destryoing connection!");
                 request.connection.destroy();
             }
         });
 
         request.on('end', function () {
             var post = qs.parse(body);
-            log('Received token: ' + post['token']);
+            logger.info('Received token: ' + post['token']);
             var user = users.find((u) => u.token == post['token']);
-            log(JSON.stringify(user));
+            logger.debug(JSON.stringify(user));
             if (typeof(user) == 'undefined') {
                 res.writeHead(404, { 'Content-Type': 'application/json' });
                 res.end("");
@@ -51,17 +50,17 @@ const requestListener = function (request, res) {
 
 function fsReadFileSynchToArray (filePath) {
     var data = JSON.parse(fs.readFileSync(filePath));
-    log(" Loading users...");
+    logger.info("Loading users...");
     console.log(data);
     return data;
 }
 
 fs.watchFile(usersPath, (curr, prev) => {   
-    log("Updating list of users");
+    logger.info("Updating list of users");
     users = fsReadFileSynchToArray(usersPath);
 });
 
 var users = fsReadFileSynchToArray(usersPath);
 const server = http.createServer(requestListener);
 server.listen(port);
-log("Started server in port " + port);
+logger.info("Started server in port " + port);
