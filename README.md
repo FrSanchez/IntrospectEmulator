@@ -10,8 +10,8 @@ Requires node 16 (maybe earlier, but this is the version I used to write the cod
 # Utilization
 1. Update users.json to match your users
 2. 
-```
-node server.js
+```bash
+npm start
 ```
 
 
