@@ -15,5 +15,8 @@
     "introspect",
     "oauth"
   ],
-  "author": "Francisco Sanchez"
+  "author": "Francisco Sanchez",
+  "dependencies": {
+    "http-server": "^14.0.0"
+  }
 }

@@ -1,6 +1,18 @@
+// Config variables
+var port = 8080;
+var usersPath = './users.json';
+
+//
+
+
 var http = require('http');
 var qs = require('querystring');
 var fs = require('fs');
+
+const log = function(data) {
+    var today  = new Date();
+    console.log(today.toLocaleString() + " " + data);
+}
 
 const requestListener = function (request, res) {
     if (request.method == 'POST') {
@@ -11,15 +23,17 @@ const requestListener = function (request, res) {
 
             // Too much POST data, kill the connection!
             // 1e6 === 1 * Math.pow(10, 6) === 1 * 1000000 ~~~ 1MB
-            if (body.length > 1e6)
+            if (body.length > 1e6) {
+                log("Too much data, destryoing connection!");
                 request.connection.destroy();
+            }
         });
 
         request.on('end', function () {
             var post = qs.parse(body);
-            console.log(today.toLocaleString() + ' Received token: ' + post['token']);
+            log('Received token: ' + post['token']);
             var user = users.find((u) => u.token == post['token']);
-            console.log(today.toLocaleString() + " " + JSON.stringify(user));
+            log(JSON.stringify(user));
             if (typeof(user) == 'undefined') {
                 res.writeHead(404, { 'Content-Type': 'application/json' });
                 res.end("");
@@ -28,27 +42,26 @@ const requestListener = function (request, res) {
                 answer = JSON.stringify({active: true, 
                     client_id: user.client_id, 
                     scope: "pardot_api", 
-                    sub: "https://login.salesforce.com/id/00Dxx0000001gEREAY/" + user.user_fid });
+                    sub: "https://login.salesforce.com/id/00Dxx0000001gFAKE1/" + user.user_fid });
                 res.end(answer);
             }
         });
     }
 }
 
-var usersPath = './users.json';
 function fsReadFileSynchToArray (filePath) {
     var data = JSON.parse(fs.readFileSync(filePath));
+    log(" Loading users...");
     console.log(data);
     return data;
 }
 
-fs.watchFile(usersPath, (curr, prev) => {
-    console.log("Updating list of users");
+fs.watchFile(usersPath, (curr, prev) => {   
+    log("Updating list of users");
     users = fsReadFileSynchToArray(usersPath);
-  });
+});
 
 var users = fsReadFileSynchToArray(usersPath);
 const server = http.createServer(requestListener);
-server.listen(8080);
-var today  = new Date();
-console.log(today.toLocaleString() + " Started server in port 8080");
+server.listen(port);
+log("Started server in port " + port);
