@@ -21,6 +21,8 @@ npm start
 ```bash
 docker build . -t fake-introspect
 docker run -p 8080:8080 -d fake-introspect
+# the following can be used to run it inside garden
+docker tag <image_ID> docker.dev.pardot.com/base/pardot/fake-introspect:latest
 ```
 
 ## Testing
@@ -31,7 +33,13 @@ To test a succesful deployment, you can just call the server:
 curl -X POST "http://localhost:8080/services/oauth2/introspect" -d "token=CustomToken3"
 ```
 
+## To run as a garden service
+- Copy garden.yml file into PARDOT_GIT_CLONE/introspect/garden.yml
+- add FAKE_INTROSPECT_ENABLED=true to your garden.local.env
+- baker-start
+
 ## TODO
 
 [ ] remove querystring
+[ ] run inside baker
 
