@@ -4,20 +4,17 @@ Provides a response required for SFDC introspect when called from Pardot during 
 
 Requires node 16 (maybe earlier, but this is the version I used to write the code)
 
-## Installation
+## Utilization
 
-- clone this repository
-- 
+- Clone the repository locally. Then you can run as a node server, or a as a docker image. 
+  
+## Run as a node server
+
 ```bash
 npm install
-```
-  
-## Utilization
-1. Update users.json to match your users
-2. 
-```bash
 npm start
 ```
+  
 ## As a docker container
 
 ```bash
@@ -26,5 +23,6 @@ docker run -p 8080:8080 -d fake-introspect
 ```
 
 ## TODO
-[ ] remove querystring 
+
+[ ] remove querystring
 
