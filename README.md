@@ -22,6 +22,14 @@ docker build . -t fake-introspect
 docker run -p 8080:8080 -d fake-introspect
 ```
 
+## Testing
+
+To test a succesful deployment, you can just call the server:
+
+```bash
+curl -X POST "http://localhost:8080/services/oauth2/introspect" -d "token=CustomToken3"
+```
+
 ## TODO
 
 [ ] remove querystring
