@@ -40,6 +40,6 @@ curl -X POST "http://localhost:8080/services/oauth2/introspect" -d "token=Custom
 
 ## TODO
 
-[ ] remove querystring
-[ ] run inside baker
+- [ ] remove querystring
+- [ ] run inside baker
 
