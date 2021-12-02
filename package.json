@@ -2,8 +2,10 @@
   "name": "fakeintrospect",
   "version": "1.0.0",
   "description": "A SFDC core introspect emulator",
+  "author": "Francisco Sanchez <francisco.sanchez@salesforce.com>",
   "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "repository": {
@@ -15,7 +17,6 @@
     "introspect",
     "oauth"
   ],
-  "author": "Francisco Sanchez",
   "dependencies": {
     "http-server": "^14.0.0",
     "log4js": "^6.3.0"
