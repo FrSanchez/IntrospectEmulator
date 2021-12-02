@@ -7,6 +7,7 @@ Requires node 16 (maybe earlier, but this is the version I used to write the cod
 ## Utilization
 
 - Clone the repository locally. Then you can run as a node server, or a as a docker image. 
+- For the configuration needed locally to use the server, look at [this quip doc](https://salesforce.quip.com/e16wAOD5ZsZz)
   
 ## Run as a node server
 
