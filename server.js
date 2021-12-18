@@ -1,9 +1,7 @@
 // Config variables
 var port = 8080;
 var usersPath = './users.json';
-
 //
-
 
 const http = require('http');
 const qs = require('querystring');
