@@ -42,4 +42,5 @@ curl -X POST "http://localhost:8080/services/oauth2/introspect" -d "token=Custom
 
 - [ ] remove querystring
 - [ ] run inside baker
+- [ ] Add entry in .dev/lib/docker.sh:docker_images_array for auto-pulling
 
