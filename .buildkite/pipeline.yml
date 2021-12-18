@@ -1,0 +1,23 @@
+env:
+  CI_PROJECT: PDT
+  CI_PLAN: INTROSPECT
+  BUILDKITE_PLUGIN_DOCKER_COMPOSE_IMAGE_REPOSITORY: ${DOCKER_BUILD_BASE}/fake-introspect/app
+  BUILDKITE_PLUGIN_DOCKER_COMPOSE_IMAGE_NAME: ${CI_PROJECT}-${CI_PLAN}-${BUILDKITE_BUILD_NUMBER}
+  BUILDKITE_PLUGIN_DOCKER_COMPOSE_CACHE_FROM_0: app:${BUILDKITE_PLUGIN_DOCKER_COMPOSE_IMAGE_REPOSITORY}:latest
+  BUILDKITE_PLUGIN_DOCKER_COMPOSE_CONFIG: docker-compose.ci.yml
+
+steps:
+  - label: ":docker: Building base image"
+    plugins:
+      - ${DOCKER_COMPOSE_PLUGIN}:
+          build: app
+          image-repository: ${BUILDKITE_PLUGIN_DOCKER_COMPOSE_IMAGE_REPOSITORY}
+          cache-from: ${BUILDKITE_PLUGIN_DOCKER_COMPOSE_CACHE_FROM_0}
+  - wait
+
+  - label: ":docker: Pushing base image for FakeIntrospect"
+    branches: "main"
+    plugins:
+      - ${DOCKER_COMPOSE_PLUGIN}:
+          push:
+            - app:${BUILDKITE_PLUGIN_DOCKER_COMPOSE_IMAGE_REPOSITORY}:latest
