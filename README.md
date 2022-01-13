@@ -24,9 +24,9 @@ npm start
 
 ```bash
 docker build . -t fake-introspect
-# docker run -p 8080:8080 -d fake-introspect
+docker run -p 8080:8080 -d fake-introspect
 # the following can be used to run it inside garden
-docker tag <image_ID> docker.dev.pardot.com/base/pardot/fake-introspect/app:latest
+# docker tag <image_ID> docker.dev.pardot.com/base/pardot/fake-introspect/app:latest
 ```
 
 ## Testing

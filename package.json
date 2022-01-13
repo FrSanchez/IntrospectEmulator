@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "A SFDC core introspect emulator",
   "author": "Francisco Sanchez <francisco.sanchez@salesforce.com>",
-  "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "dev": "node src/index.js",
+    "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "repository": {
@@ -18,6 +18,7 @@
     "oauth"
   ],
   "dependencies": {
+    "express": "^4.17.2",
     "http-server": "^14.0.0",
     "log4js": "^6.3.0"
   }
