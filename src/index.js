@@ -14,10 +14,6 @@ app.use(express.urlencoded({
     extended: true
 }))
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-
 app.post('/services/oauth2/introspect', (req, res) => {
     logger.info("received call");
     logger.debug(req.body);
@@ -37,8 +33,20 @@ app.post('/services/oauth2/introspect', (req, res) => {
     }
 })
 
+app.get('*', (req, res) => {
+    logger.debug("Invalid GET");
+    res.type('json');
+    res.status(404).send("");
+})
+  
+app.post('*', (req, res) => {
+    logger.debug("Invalid POST");
+    res.type('json');
+    res.status(404).send("");
+})
+
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log(`Fake introspector app listening at http://localhost:${port}`)
 })
 
 function fsReadFileSynchToArray (filePath) {
