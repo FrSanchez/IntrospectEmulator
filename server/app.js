@@ -1,12 +1,12 @@
-const express = require('express')
+const express = require("express");
+const app = express();
 const log4js = require("log4js");
 const fs = require('fs');
 
-const app = express()
-const port = 8080
 const logger = log4js.getLogger();
-
+var environment = process.env.NODE_ENV
 const usersPath = './users.json';
+const introspectPath = '/services/oauth2/introspect';
 
 logger.level = 'debug';
 
@@ -14,7 +14,8 @@ app.use(express.urlencoded({
     extended: true
 }))
 
-app.post('/services/oauth2/introspect', (req, res) => {
+
+app.post(introspectPath, (req, res) => {
     logger.info("received call");
     logger.debug(req.body);
     var user = users.find((u) => u.token == req.body.token);
@@ -38,16 +39,13 @@ app.get('*', (req, res) => {
     res.type('json');
     res.status(404).send("");
 })
-  
+
 app.post('*', (req, res) => {
     logger.debug("Invalid POST");
     res.type('json');
     res.status(404).send("");
 })
 
-app.listen(port, () => {
-  console.log(`Fake introspector app listening at http://localhost:${port}`)
-})
 
 function fsReadFileSynchToArray (filePath) {
     var data = JSON.parse(fs.readFileSync(filePath));
@@ -56,9 +54,14 @@ function fsReadFileSynchToArray (filePath) {
     return data;
 }
 
-fs.watchFile(usersPath, (curr, prev) => {   
-    logger.info("Updating list of users");
-    users = fsReadFileSynchToArray(usersPath);
-});
+if (environment !== 'test') {
+    logger.info("Skip watchfile");
+    fs.watchFile(usersPath, (curr, prev) => {
+        logger.info("Updating list of users");
+        users = fsReadFileSynchToArray(usersPath);
+    });
+}
 
 var users = fsReadFileSynchToArray(usersPath);
+
+module.exports = app;

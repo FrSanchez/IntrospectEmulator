@@ -4,9 +4,9 @@
   "description": "A SFDC core introspect emulator",
   "author": "Francisco Sanchez <francisco.sanchez@salesforce.com>",
   "scripts": {
-    "dev": "node src/index.js",
-    "start": "node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 0"
+    "dev": "node server/index.js",
+    "start": "node server/index.js",
+    "test": "PORT=3300 NODE_ENV=test jest --testTimeout=1000"
   },
   "repository": {
     "type": "git",
@@ -21,5 +21,9 @@
     "express": "^4.17.2",
     "http-server": "^14.0.0",
     "log4js": "^6.3.0"
+  },
+  "devDependencies": {
+    "jest": "^27.5.1",
+    "supertest": "^6.2.2"
   }
 }

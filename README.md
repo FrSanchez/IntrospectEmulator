@@ -19,6 +19,12 @@ The only implemented functinality is to search for the token in a user's table, 
 npm install
 npm start
 ```
+
+## Run tests
+
+```bash
+npm test
+```
   
 ## As a docker container
 
