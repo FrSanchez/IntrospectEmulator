@@ -50,7 +50,8 @@ app.post('*', (req, res) => {
 function fsReadFileSynchToArray (filePath) {
     var data = JSON.parse(fs.readFileSync(filePath));
     logger.info("Loading users...");
-    console.log(data);
+    logger.debug(data);
+    logger.info("...done!")
     return data;
 }
 
