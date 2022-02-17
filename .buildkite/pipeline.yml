@@ -1,7 +1,8 @@
 env:
   CI_PROJECT: PDT
   CI_PLAN: INTROSPECT
-  BUILDKITE_PLUGIN_DOCKER_COMPOSE_IMAGE_REPOSITORY: ${DOCKER_BUILD_BASE}/fake-introspect/app
+  DOCKER_BUILD_BASE: docker.dev.pardot.com/build
+  BUILDKITE_PLUGIN_DOCKER_COMPOSE_IMAGE_REPOSITORY: ${DOCKER_BUILD_BASE}/introspect-emulator/app
   BUILDKITE_PLUGIN_DOCKER_COMPOSE_IMAGE_NAME: ${CI_PROJECT}-${CI_PLAN}-${BUILDKITE_BUILD_NUMBER}
   BUILDKITE_PLUGIN_DOCKER_COMPOSE_CACHE_FROM_0: app:${BUILDKITE_PLUGIN_DOCKER_COMPOSE_IMAGE_REPOSITORY}:latest
   BUILDKITE_PLUGIN_DOCKER_COMPOSE_CONFIG: docker-compose.ci.yml
@@ -15,7 +16,20 @@ steps:
           cache-from: ${BUILDKITE_PLUGIN_DOCKER_COMPOSE_CACHE_FROM_0}
   - wait
 
-  - label: ":docker: Pushing base image for FakeIntrospect"
+  - label: ":eslint: Linting"
+    plugins:
+      - ${DOCKER_COMPOSE_PLUGIN}:
+          run: app
+    command: "npm run lint -- --fix"
+
+  - label: ":mocha: Tests"
+    plugins:
+      - ${DOCKER_COMPOSE_PLUGIN}:
+          run: app
+    command: "npm test"
+  - wait
+
+  - label: ":docker: Pushing base image for IntrospectEmulator"
     branches: "main"
     plugins:
       - ${DOCKER_COMPOSE_PLUGIN}:

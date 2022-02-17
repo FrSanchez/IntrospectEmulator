@@ -57,9 +57,10 @@ function fsReadFileSynchToArray (filePath) {
 
 if (environment !== 'test') {
     logger.info("Skip watchfile");
-    fs.watchFile(usersPath, (curr, prev) => {
+    fs.watchFile(usersPath, () => {
         logger.info("Updating list of users");
         users = fsReadFileSynchToArray(usersPath);
+
     });
 }
 

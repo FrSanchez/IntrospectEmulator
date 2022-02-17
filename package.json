@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "node server/index.js",
     "start": "node server/index.js",
-    "test": "PORT=3300 NODE_ENV=test jest --testTimeout=1000"
+    "test": "PORT=3300 NODE_ENV=test jest --testTimeout=1000",
+    "lint": "eslint server --ext .js"
   },
   "repository": {
     "type": "git",
@@ -23,7 +24,9 @@
     "log4js": "^6.3.0"
   },
   "devDependencies": {
+    "eslint": "^8.9.0",
     "jest": "^27.5.1",
+    "lint": "^0.7.0",
     "supertest": "^6.2.2"
   }
 }
