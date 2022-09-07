@@ -29,16 +29,16 @@ router.get('/:tokenId', (req, res) => {
     });
 });
 
-router.post('/', (req, res) => {
+router.post('/', (req, res, next) => {
     const { client_id, token, user_fid, active } = req.body;
     return req.context.models.Token.create({clientId: client_id, token: token, userFid: user_fid , active: active})
     .then((token) => res.send(token))
     .catch(next)
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', (req, res, next) => {
     const id = parseInt(req.params.id)
-    return db.Token.findById(id)
+    return req.context.models.Token.findById(id)
       .then((token) => token.destroy())
       .then(() => res.status(204).send(""))
       .catch(next)

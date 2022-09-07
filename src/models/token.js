@@ -32,7 +32,7 @@ const getTokenModel = (sequelize, { DataTypes }) => {
     });
 
     Token.findByToken = async (token) => {
-        let answer = await User.findOne({
+        let answer = await Token.findOne({
           where: { token: token },
         });
         

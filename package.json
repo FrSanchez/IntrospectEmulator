@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --exec babel-node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src --ext .js"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,7 @@
     "@babel/core": "^7.19.0",
     "@babel/node": "^7.18.10",
     "@babel/preset-env": "^7.19.0",
+    "eslint": "^8.23.0",
     "nodemon": "^2.0.19"
   },
   "dependencies": {

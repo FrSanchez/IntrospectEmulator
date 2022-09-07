@@ -32,7 +32,7 @@ app.use((req, res, next) => {
       next(error);
   });
 
-  app.use((error, req, res, next) => {
+  app.use((error, req, res) => {
     if (!error.statusCode) error.statusCode = 500;
   
     if (error.statusCode === 301) {
