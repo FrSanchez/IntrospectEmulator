@@ -43,6 +43,12 @@ To test a succesful deployment, you can just call the server:
 curl -X POST "http://localhost:8080/services/oauth2/introspect" -d "token=CustomToken3"
 ```
 
+When running inside docker, there won't be any port available from localhost, therefore you have to do the following to test the call from the pi container:
+
+```bash 
+baker-exec curl -X POST "http://introspect-emulator.pardot.svc.cluster.local:58085/services/oauth2/introspect" -d "token=CustomToken3"
+```
+
 ## To run as a garden service
 
 - Copy garden.yml file into PARDOT_GIT_CLONE/introspect/garden.yml
@@ -54,4 +60,3 @@ curl -X POST "http://localhost:8080/services/oauth2/introspect" -d "token=Custom
 - [ ] remove querystring
 - [ ] run inside baker
 - [ ] Add entry in .dev/lib/docker.sh:docker_images_array for auto-pulling
-

@@ -8,5 +8,29 @@ env:
   BUILDKITE_PLUGIN_DOCKER_COMPOSE_CONFIG: docker-compose.ci.yml
 
 steps:
-  - label: ":whale: NO-OP"
-    command: "echo 'no-op'"
+  - label: ":docker: Building base image"
+    plugins:
+      - ${DOCKER_COMPOSE_PLUGIN}:
+          build: app
+          image-repository: ${BUILDKITE_PLUGIN_DOCKER_COMPOSE_IMAGE_REPOSITORY}
+          cache-from: ${BUILDKITE_PLUGIN_DOCKER_COMPOSE_CACHE_FROM_0}
+  - wait
+
+  - label: ":eslint: Linting"
+    plugins:
+      - ${DOCKER_COMPOSE_PLUGIN}:
+          run: app
+    command: "npm run lint"
+
+  - label: ":mocha: Tests"
+    plugins:
+      - ${DOCKER_COMPOSE_PLUGIN}:
+          run: app
+    command: "npm test"
+  - wait
+
+  - label: ":docker: Pushing base image for IntrospectEmulator"
+    plugins:
+      - ${DOCKER_COMPOSE_PLUGIN}:
+          push:
+            - app:${BUILDKITE_PLUGIN_DOCKER_COMPOSE_IMAGE_REPOSITORY}:latest
