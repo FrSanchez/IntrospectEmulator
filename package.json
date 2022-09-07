@@ -1,0 +1,28 @@
+{
+  "name": "introspect-emulator",
+  "version": "1.0.0",
+  "description": "Provides a response required for SFDC introspect when called from Pardot during a token introspect",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --exec babel-node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.dev.pardot.com:Pardot/introspect-emulator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.19.0",
+    "@babel/node": "^7.18.10",
+    "@babel/preset-env": "^7.19.0",
+    "nodemon": "^2.0.19"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1"
+  }
+}
