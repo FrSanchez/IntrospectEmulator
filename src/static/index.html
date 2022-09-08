@@ -21,6 +21,10 @@
 <body>
   <div id="app" class="container">
     <section class="section section-container" style="padding-top: 24px; padding-bottom: 5px;">
+        <div class="notification is-info">
+              This is a user-friendly implementation, but don't expect any error handling. 
+              If you think this should be extended, please feel free to add a PR in the repo. 
+        </div>
         <h2 class="title">Tokens</h2>
         <contact v-for="token in tokens"
             :key="token.id"
