@@ -82,6 +82,22 @@ describe("Tokens", function(){
                 res.should.have.status(404);
                 done();
             })
+        })
     })
+
+    describe ("DELETE ALL", function(){
+        it("should remove all at the end", done=>{
+            console.log ("Deleting all data in db.")
+            chai.request(server)
+                .delete("/api/tokens/")
+                .send({})
+                .end((err,res)=>{
+                    res.should.have.status(204);
+                    console.log("Response Body:", res.body);
+                    done()
+                })
+        })
+
     })
+
 })

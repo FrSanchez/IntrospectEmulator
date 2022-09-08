@@ -16,4 +16,6 @@ RUN npm install
 COPY . .
 
 EXPOSE 8080
-CMD [ "node", "src/index.js" ]
+RUN npm run migrate
+RUN npm run seed
+CMD [ "npm", "start" ]
