@@ -38,6 +38,13 @@ router.post('/', (req, res, next) => {
     .catch(next)
 });
 
+router.delete('/', (req, res, next) => {
+    console.log('delete all');
+    return req.context.db.Token.truncate()
+    .then(() => res.status(204).send(''))
+    .catch(next)
+});
+
 router.delete('/:id', (req, res, next) => {
     const id = parseInt(req.params.id)
     return req.context.db.Token.findByPk(id)

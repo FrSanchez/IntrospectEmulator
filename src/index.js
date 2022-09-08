@@ -5,7 +5,7 @@ import express from 'express';
 import db from './models';
 
 import routes from './routes';
-const eraseDatabaseOnSync = false;
+// const eraseDatabaseOnSync = false;
 
 const app = express();
 
@@ -25,23 +25,25 @@ app.use((req, res, next) => {
 
   app.use(express.static(__dirname + '/static'));
 
-  app.get('*', function (req, res, next) {
+  app.get('*', function (req, res) {
     res.status(301).redirect('/not-found');
   });
 
-  app.use((error, req, res, next) => {
+  app.use((error, req, res) => {
     return res.status(500).json({ error: error.toString() });
   });
 
-  db.sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
-    if (eraseDatabaseOnSync) {
-      createTokens();
-    }
+//   const createTokens = async () => {
+//   };
+
+//   db.sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
+//     if (eraseDatabaseOnSync) {
+//       createTokens();
+//     }
   
-    app.listen(process.env.PORT, () =>
+const server = app.listen(process.env.PORT, () =>
       console.log(`Example app listening on port ${process.env.PORT}!`),
     );
-  });
+//   });
 
-  const createTokens = async () => {
-  };
+module.exports = server;
