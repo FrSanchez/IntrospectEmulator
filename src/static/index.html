@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Contacts</title>
+  <title>Tokens</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17-beta.0/vue.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -21,37 +21,37 @@
 <body>
   <div id="app" class="container">
     <section class="section section-container" style="padding-top: 24px; padding-bottom: 5px;">
-        <h2 class="title">Contacts</h2>
-        <contact v-for="contact in contacts"
-            :key="contact.name"
-            :contact="contact"
-            @save-contact="onAddOrUpdateContact" 
-            @delete-contact="deleteContact" />
+        <h2 class="title">Tokens</h2>
+        <contact v-for="token in tokens"
+            :key="token.id"
+            :contact="token"
+            @save-token="onAddOrUpdateToken" 
+            @delete-token="deleteToken" />
     </section>
     <section class="section section-container" style="padding-bottom: 10px;">
       <div class="box">
-        <add-update-contact title="Add Contact" @save-contact="onAddOrUpdateContact" />
+        <add-update-token title="Add Token" @save-token="onAddOrUpdateToken" />
       </div>
     </section>
   </div>
   <script>
-  const AddUpdateContact = {
+  const AddUpdateToken = {
     props: ['contact', 'title'],
     data () {
       return {
         id: this.contact ? this.contact.id : null,
-        firstName: this.contact ? this.contact.firstName : '',
-        lastName: this.contact ? this.contact.lastName : '',
-        phone: this.contact ? this.contact.phone : ''
+        clientId: this.contact ? this.contact.clientId : '',
+        token: this.contact ? this.contact.token : '',
+        userFid: this.contact ? this.contact.userFid : ''
       }
     },
     methods: {
       save() {
-        this.$emit('save-contact', { id: this.id, firstName: this.firstName, lastName: this.lastName, phone: this.phone })
+        this.$emit('save-token', { id: this.id, clientId: this.clientId, token: this.token, userFid: this.userFid })
         if (!this.id) {
-          this.firstName = ''
-          this.lastName = ''
-          this.phone = ''
+          this.clientId = ''
+          this.token = ''
+          this.userFid = ''
         }
       }
     },
@@ -59,21 +59,21 @@
       <form class="form" @submit.prevent="save">
         <h3 class='subtitle'>{{ title }}</h3>
         <div class="field">
-            <label>First Name</label>
+            <label>Pardot User Id</label>
             <div class="control">
-              <input class="input" type="text" v-model="firstName">
+              <input class="input" type="text" v-model="clientId">
             </div> 
         </div>
         <div class="field">
-            <label>Last Name</label>
+            <label>Token</label>
             <div class="control">
-              <input class="input" type="text" v-model="lastName">
+              <input class="input" type="text" v-model="token">
             </div> 
         </div>
         <div class="field">
-            <label>Phone</label>
+            <label>Salesforce User Id</label>
             <div class="control">
-              <input class="input" type="text" v-model="phone">
+              <input class="input" type="text" v-model="userFid">
             </div> 
         </div>
         <div class="field">
@@ -85,36 +85,36 @@
     `
   }
 
-  const Contact = {
+  const Token = {
     props: ['contact'],
-    components: { 'add-update-contact': AddUpdateContact },
+    components: { 'add-update-token': AddUpdateToken },
     data () {
       return {
         showDetail: false
       }
     },
     methods: {
-      onAddOrUpdateContact(contact) {
-        this.$emit('save-contact', contact)
+      onAddOrUpdateToken(contact) {
+        this.$emit('save-token', contact)
       },
-      deleteContact (contact) {
-        this.$emit('delete-contact', contact)
+      deleteToken (contact) {
+        this.$emit('delete-token', contact)
       }
     },
     template: `
       <div class="card">
         <header class="card-header">
           <p @click="showDetail = !showDetail" class="card-header-title">
-            {{ contact.firstName }} {{ contact.lastName }}
+            {{ contact.token }}
           </p>
-          <a class="card-header-icon" @click.stop="deleteContact(contact)">
+          <a class="card-header-icon" @click.stop="deleteToken(contact)">
             <span class="icon">
               <i class="fa fa-trash"></i>
             </span>
           </a>
         </header>
         <div v-show="showDetail" class="card-content">
-            <add-update-contact title="Details" :contact="contact" @save-contact="onAddOrUpdateContact" />
+            <add-update-token title="Details" :contact="contact" @save-token="onAddOrUpdateToken" />
         </div>
       </div>
     `
@@ -122,51 +122,51 @@
 
   new Vue({
     el: '#app',
-    components: { contact: Contact, 'add-update-contact': AddUpdateContact },
+    components: { contact: Token, 'add-update-token': AddUpdateToken },
     data: {
-      contacts: [],
-      apiURL: 'http://localhost:3000/api/contacts'
+      tokens: [],
+      apiURL: 'http://localhost:8080/api/tokens'
     },
     methods: {
-      onAddOrUpdateContact (contact) {
+      onAddOrUpdateToken (contact) {
         if (contact.id) {
-          this.updateContact(contact)
+          this.updateToken(contact)
         } else {
-          this.addContact(contact)
+          this.addToken(contact)
         }
       },
-      addContact (contact) {
+      addToken (contact) {
         return axios.post(this.apiURL, contact)
           .then((response) => {
-            const copy = this.contacts.slice()
+            const copy = this.tokens.slice()
             copy.push(response.data)
-            this.contacts = copy
+            this.tokens = copy
           })
       },
-      updateContact (contact) {
+      updateToken (contact) {
         return axios.put(`${this.apiURL}/${contact.id}`, contact)
           .then((response) => {
-            const copy = this.contacts.slice()
+            const copy = this.tokens.slice()
             const idx = copy.findIndex((c) => c.id === response.data.id)
             copy[idx] = response.data
-            this.contacts = copy
+            this.tokens = copy
           })
       },
-      deleteContact (contact) {
+      deleteToken (contact) {
         console.log('deleting', contact)
         return axios.delete(`${this.apiURL}/${contact.id}`)
           .then((response) => {
-            let copy = this.contacts.slice()
-            const idx = copy.findIndex((c) => c.id === response.data.id)
+            let copy = this.tokens.slice()
+            const idx = copy.findIndex((c) => c.id === contact.id)
             copy.splice(idx, 1)
-            this.contacts = copy
+            this.tokens = copy
           })
       }
     },
     beforeMount () {
       axios.get(this.apiURL)
         .then((response) => {
-          this.contacts = response.data
+          this.tokens = response.data
         })
     }
   })
