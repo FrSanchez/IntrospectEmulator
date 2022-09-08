@@ -4,7 +4,7 @@ const router = Router();
 
 router.post('/introspect', (req, res) => {
   console.log(req.body.token);
-  return req.context.models.Token.findOne({
+  return req.context.db.Token.findOne({
     where: { token: req.body.token},
   })
   .then((token) => {

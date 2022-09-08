@@ -1,45 +1,26 @@
-const getTokenModel = (sequelize, { DataTypes }) => {
-    const Token = sequelize.define('token', {
-        clientId: {
-            type: DataTypes.INTEGER,
-            unique: true,
-            allowNull: false,
-            validate: {
-                notEmpty: true,
-            },
-        },
-        token: {
-            type: DataTypes.STRING,
-            unique: true,
-            allowNull: false,
-            validate: {
-                notEmpty: true,
-            },
-        },
-        userFid: {
-            type: DataTypes.STRING,
-            unique: false,
-            allowNull: false,
-            validate: {
-                notEmpty: true,
-            },
-        },
-        active: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-            defaultValue: true,
-        }
-    });
-
-    Token.findByToken = async (token) => {
-        let answer = await Token.findOne({
-          where: { token: token },
-        });
-        
-        return answer;
-      };
-  
-    return Token;
-  };
-  
-  export default getTokenModel;
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class Token extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    // static associate(models) {
+    //   // define association here
+    // }
+  }
+  Token.init({
+    clientId: DataTypes.INTEGER,
+    token: DataTypes.STRING,
+    userFid: DataTypes.STRING,
+    active: DataTypes.BOOLEAN
+  }, {
+    sequelize,
+    modelName: 'Token',
+  });
+  return Token;
+};

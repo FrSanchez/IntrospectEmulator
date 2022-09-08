@@ -1,10 +1,11 @@
 import 'dotenv/config';
 import cors from 'cors';
 import express from 'express';
-import models, { sequelize } from './models';
+
+import db from './models';
 
 import routes from './routes';
-const eraseDatabaseOnSync = true;
+const eraseDatabaseOnSync = false;
 
 const app = express();
 
@@ -14,37 +15,28 @@ app.use(cors());
 
 app.use((req, res, next) => {
     req.context = {
-      models,
+      db
     };
     next();
   });
 
   app.use('/services/oauth2', routes.oauth2);
-  app.use('/tokens', routes.token);
+  app.use('/api/tokens', routes.token);
+  app.use(express.static(__dirname + '/static'));
 
-  app.get('*', function (req, res, next) {
-    const error = new Error(
-        `${req.ip} tried to access ${req.originalUrl}`,
-      );
-    
-      error.statusCode = 301;
-    
-      next(error);
-  });
-
-  app.use((error, req, res) => {
-    if (!error.statusCode) error.statusCode = 500;
+    //  app.use((error, req, res) => {
+//     if (!error.statusCode) error.statusCode = 500;
   
-    if (error.statusCode === 301) {
-      return res.status(301).redirect('/not-found');
-    }
+//     if (error.statusCode === 301) {
+//       return res.status(301).redirect('/not-found');
+//     }
   
-    return res
-      .status(error.statusCode)
-      .json({ error: error.toString() });
-  });
+//     return res
+//       .status(error.statusCode)
+//       .json({ error: error.toString() });
+//   });
 
-  sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
+  db.sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
     if (eraseDatabaseOnSync) {
       createTokens();
     }

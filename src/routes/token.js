@@ -3,7 +3,7 @@ import { Router } from 'express';
 const router = Router();
 
 router.get('/', (req, res) => {
-    return req.context.models.Token.findAll()
+    return req.context.db.Token.findAll()
         .then((tokens) => res.send(tokens))
         .catch((err)=> {
             console.log('There was an error querying tokens', JSON.stringify(err));
@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:tokenId', (req, res) => {
-    return req.context.models.Token.findOne({
+    return req.context.db.Token.findOne({
         where: { id: req.params.tokenId},
     })
     .then((token) => {
@@ -31,14 +31,14 @@ router.get('/:tokenId', (req, res) => {
 
 router.post('/', (req, res, next) => {
     const { client_id, token, user_fid, active } = req.body;
-    return req.context.models.Token.create({clientId: client_id, token: token, userFid: user_fid , active: active})
+    return req.context.db.Token.create({clientId: client_id, token: token, userFid: user_fid , active: active})
     .then((token) => res.send(token))
     .catch(next)
 });
 
 router.delete('/:id', (req, res, next) => {
     const id = parseInt(req.params.id)
-    return req.context.models.Token.findById(id)
+    return req.context.db.Token.findById(id)
       .then((token) => token.destroy())
       .then(() => res.status(204).send(""))
       .catch(next)
