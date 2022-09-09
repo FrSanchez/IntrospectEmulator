@@ -38,7 +38,7 @@ router.post('/', (req, res, next) => {
     .catch(next)
 });
 
-router.put('/:id', (req, res, next) => {
+router.put('/:id', (req, res) => {
     const id = parseInt(req.params.id)
     return req.context.db.Token.findByPk(id)
     .then((token) => {
