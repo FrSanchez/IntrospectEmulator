@@ -8,38 +8,23 @@ let should = chai.should();
 
 chai.use(chaiHttp);
 describe("Tokens", function(){
-    describe ("DELETE ALL", function(){
-        it("should remove all first", done=>{
-            console.log ("Deleting all data in db first.")
-            chai.request(server)
-                .delete("/api/tokens/")
-                .send({})
-                .end((err,res)=>{
-                    res.should.have.status(204);
-                    console.log("Response Body:", res.body);
-                    done()
-                })
-        })
-
-    })
 
     describe ("CRUD OPERATIONS", function(){
 
         var tokens = [{
-            "clientId": "591",
-            "token": "Token591",
-            "userFid": "005xx000Cust013c00",
-            "active": true
+            clientId: 591,
+            token: "Token591",
+            userFid: "005xx000Cust013c00",
+            active: true
         }, {
-            "clientId": "195",
-            "token": "Token195",
-            "userFid": "005xx000Cust013c00",
-            "active": true
+            clientId: 195,
+            token: "Token195",
+            userFid: "005xx000Cust013c00",
+            active: true
         }]
 
         it("Should add Tokens in DB", (done) => {
             tokens.forEach(function(token) {
-                console.log(token);
                 chai.request(server)
                 .post("/api/tokens/")
                 .send(token)
@@ -55,7 +40,41 @@ describe("Tokens", function(){
                 .get("/api/tokens/")
                 .end((err, result)=>{
                     result.should.have.status(200);
-                    assert.equal(result.body.length, 2);
+                    const tokens = result.body;
+                    assert.equal(tokens.length, 2);
+                    for(var i = 0; i < 2; i++) {
+                        assert.equal(tokens[i].clientId, tokens[i].clientId)
+                    }
+                    done()
+                })
+        })
+
+        it("should fetch one token", (done)=>{
+            chai.request(server)
+                .get("/api/tokens/1")
+                .end((err, result)=>{
+                    result.should.have.status(200);
+                    const token = result.body;
+                    assert.equal(true, token.clientId == tokens[0].clientId || token.clientId == tokens[1].clientId)
+                    done()
+                })      
+        })
+
+        it ("Should update one token", (done)=>{
+            const token = {
+                clientId: 200,
+                token: "Token200",
+                active: false
+            }
+            chai.request(server)
+                .put('/api/tokens/1')
+                .send(token)
+                .end((err, result)=>{
+                    result.should.have.status(200);
+                    const srvToken = result.body
+                    assert.equal(srvToken.clientId, token.clientId)
+                    assert.equal(srvToken.token, token.token)
+                    assert.equal(srvToken.active, token.active)
                     done()
                 })
         })
@@ -68,7 +87,6 @@ describe("Tokens", function(){
                 .end((err, res) => {
                     res.should.have.status(200);
                     assert.equal(res.body.active, true);
-                    assert.equal(res.body.client_id, tokens[0].clientId);
                     done();
                 })
         })
@@ -84,20 +102,4 @@ describe("Tokens", function(){
             })
         })
     })
-
-    describe ("DELETE ALL", function(){
-        it("should remove all at the end", done=>{
-            console.log ("Deleting all data in db.")
-            chai.request(server)
-                .delete("/api/tokens/")
-                .send({})
-                .end((err,res)=>{
-                    res.should.have.status(204);
-                    console.log("Response Body:", res.body);
-                    done()
-                })
-        })
-
-    })
-
 })

@@ -5,7 +5,7 @@ import express from 'express';
 import db from './models';
 
 import routes from './routes';
-// const eraseDatabaseOnSync = false;
+const eraseDatabaseOnSync = false;
 
 const app = express();
 
@@ -32,20 +32,23 @@ app.use((req, res, next) => {
   });
 
   app.use((error, req, res) => {
+    console.log(error);
     return res.status(500).json({ error: error.toString() });
   });
 
 //   const createTokens = async () => {
 //   };
 
-//   db.sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
-//     if (eraseDatabaseOnSync) {
-//       createTokens();
-//     }
+  var server = null;
+
+  // db.sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
+  //   if (eraseDatabaseOnSync) {
+  //     createTokens();
+  //   }
   
-const server = app.listen(process.env.PORT, () =>
-      console.log(`Example app listening on port ${process.env.PORT}!`),
+    server = app.listen(process.env.PORT, () =>
+      console.log(`Tokens app listening on port ${process.env.PORT}!`),
     );
-//   });
+  // });
 
 module.exports = server;

@@ -3,6 +3,7 @@ import { Router } from 'express';
 const router = Router();
 
 router.get('/', (req, res) => {
+    req.context.db.Token.sync();
     return req.context.db.Token.findAll({
         order: [['clientId', 'ASC']]
     })
@@ -41,10 +42,10 @@ router.post('/', (req, res, next) => {
 router.put('/:id', (req, res) => {
     const id = parseInt(req.params.id)
     return req.context.db.Token.findByPk(id)
-    .then((token) => {
-        const { clientId, tkn, userFid, active } = req.body
-        return token.update({ clientId, tkn, userFid, active })
-        .then(() => res.send(token))
+    .then((dbToken) => {
+        const { clientId, token, userFid, active } = req.body
+        return dbToken.update({ clientId, token, userFid, active })
+        .then(() => res.send(dbToken))
         .catch((err) => {
             console.log('***Error updating token', JSON.stringify(err))
             res.status(400).send(err)
@@ -56,7 +57,10 @@ router.delete('/', (req, res, next) => {
     console.log('delete all');
     return req.context.db.Token.truncate()
     .then(() => res.status(204).send(''))
-    .catch(next)
+    .catch((err) => {
+        console.log('***Error deleing all tokens ', JSON.stringify(err))
+        res.status(500).send(err)
+    })
 });
 
 router.delete('/:id', (req, res, next) => {
@@ -64,7 +68,10 @@ router.delete('/:id', (req, res, next) => {
     return req.context.db.Token.findByPk(id)
       .then((token) => token.destroy())
       .then(() => res.status(204).send(""))
-      .catch(next)
+      .catch((err) => {
+        console.log('***Error deleing 1 token ', JSON.stringify(err))
+        res.status(500).send(err)
+    })
   });
 
 export default router;

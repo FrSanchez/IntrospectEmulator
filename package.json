@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --exec babel-node src/index.js",
-    "test": "mocha --require @babel/register",
+    "pretest": "NODE_ENV=test npm run migrate",
+    "test": "NODE_ENV=test mocha --require @babel/register",
+    "posttest": "rm -rv data/tokens.test.sqlite3",
     "lint": "eslint src --ext .js",
     "migrate": "sequelize db:migrate",
     "seed": "sequelize db:seed"
