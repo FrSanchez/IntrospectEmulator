@@ -5,7 +5,7 @@ import express from 'express';
 import db from './models';
 
 import routes from './routes';
-const eraseDatabaseOnSync = false;
+// const eraseDatabaseOnSync = false;
 
 const app = express();
 

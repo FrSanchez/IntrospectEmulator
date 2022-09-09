@@ -53,7 +53,7 @@ router.put('/:id', (req, res) => {
     })
 });
 
-router.delete('/', (req, res, next) => {
+router.delete('/', (req, res) => {
     console.log('delete all');
     return req.context.db.Token.truncate()
     .then(() => res.status(204).send(''))
@@ -63,7 +63,7 @@ router.delete('/', (req, res, next) => {
     })
 });
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', (req, res) => {
     const id = parseInt(req.params.id)
     return req.context.db.Token.findByPk(id)
       .then((token) => token.destroy())
