@@ -38,6 +38,20 @@ router.post('/', (req, res, next) => {
     .catch(next)
 });
 
+router.put('/:id', (req, res, next) => {
+    const id = parseInt(req.params.id)
+    return req.context.db.Token.findByPk(id)
+    .then((token) => {
+        const { clientId, tkn, userFid, active } = req.body
+        return token.update({ clientId, tkn, userFid, active })
+        .then(() => res.send(token))
+        .catch((err) => {
+            console.log('***Error updating token', JSON.stringify(err))
+            res.status(400).send(err)
+        })
+    })
+});
+
 router.delete('/', (req, res, next) => {
     console.log('delete all');
     return req.context.db.Token.truncate()

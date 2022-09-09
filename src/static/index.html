@@ -6,13 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Tokens</title>
+  <link rel="shortcut icon" href="/favicon.sfdc.dev.png" type="image/ico">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17-beta.0/vue.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
     .section-container {
-      max-width: 800px;
+      max-width: 650px;
       margin-right: auto;
       margin-left: auto;
     }
@@ -46,12 +47,13 @@
         id: this.contact ? this.contact.id : null,
         clientId: this.contact ? this.contact.clientId : '',
         token: this.contact ? this.contact.token : '',
-        userFid: this.contact ? this.contact.userFid : ''
+        userFid: this.contact ? this.contact.userFid : '',
+        active: this.contact ? this.contact.active : true
       }
     },
     methods: {
       save() {
-        this.$emit('save-token', { id: this.id, clientId: this.clientId, token: this.token, userFid: this.userFid })
+        this.$emit('save-token', { id: this.id, clientId: this.clientId, token: this.token, userFid: this.userFid, active: this.active })
         if (!this.id) {
           this.clientId = ''
           this.token = ''
@@ -78,6 +80,12 @@
             <label>Salesforce User Id</label>
             <div class="control">
               <input class="input" type="text" v-model="userFid">
+            </div> 
+        </div>
+        <div class="field">
+            <div class="control">
+              Token Active : 
+              <input class="checkbox" type="checkbox" v-model="active"> 
             </div> 
         </div>
         <div class="field">
@@ -109,7 +117,13 @@
       <div class="card">
         <header class="card-header">
           <p @click="showDetail = !showDetail" class="card-header-title">
-            {{ contact.token }}
+            <span class="icon-text">
+              <span>{{ contact.token }}</span>
+              <span  v-show="!showDetail"  class="icon">
+                <i v-if="contact.active" class="fa fa-check-square"></i>
+                <i v-else class="fa fa-xing-square"></i>
+              </span>
+            </span>
           </p>
           <a class="card-header-icon" @click.stop="deleteToken(contact)">
             <span class="icon">
@@ -129,7 +143,7 @@
     components: { contact: Token, 'add-update-token': AddUpdateToken },
     data: {
       tokens: [],
-      apiURL: 'http://localhost:58085/api/tokens'
+      apiURL: '/api/tokens'
     },
     methods: {
       onAddOrUpdateToken (contact) {
