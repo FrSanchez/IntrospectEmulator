@@ -17,6 +17,8 @@ app.use((req, res, next) => {
     req.context = {
       db
     };
+    console.log(req.method, req.url, req.body);
+    
     next();
   });
 
