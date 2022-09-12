@@ -4,13 +4,14 @@
   "description": "Provides a response required for SFDC introspect when called from Pardot during a token introspect",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec babel-node src/index.js",
     "pretest": "NODE_ENV=test npm run migrate",
     "test": "NODE_ENV=test mocha --require @babel/register",
     "posttest": "rm -rv data/tokens.test.sqlite3",
     "lint": "eslint src --ext .js",
     "migrate": "sequelize db:migrate",
-    "seed": "sequelize db:seed"
+    "seed": "sequelize db:seed",
+    "prestart": "npm run migrate",
+    "start": "nodemon --exec babel-node src/index.js"
   },
   "repository": {
     "type": "git",
