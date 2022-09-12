@@ -8,7 +8,7 @@
   <title>Tokens</title>
   <link rel="shortcut icon" href="/favicon.sfdc.dev.png" type="image/ico">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17-beta.0/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
@@ -22,8 +22,8 @@
 <body>
   <div id="app" class="container">
     <section class="section section-container" style="padding-top: 24px; padding-bottom: 5px;">
-        <div class="notification is-info">
-          <button class="delete"></button>
+        <div v-show="notification" class="notification is-info">
+          <button class="delete" @click.stop="onClick()"></button>
               This is a user-friendly implementation, but don't expect any error handling. 
               If you think this should be extended, please feel free to add a PR in the repo. 
         </div>
@@ -36,173 +36,10 @@
     </section>
     <section class="section section-container" style="padding-bottom: 10px;">
       <div class="box">
-        <add-update-token head="Add Token" @save-token="onAddOrUpdateToken" />
+        <add-update-token title="Add Token" @save-token="onAddOrUpdateToken" />
       </div>
     </section>
   </div>
-  <script>
-  const AddUpdateToken = {
-    props: ['object', 'head'],
-    data () {
-      return {
-        id: this.object ? this.object.id : null,
-        clientId: this.object ? this.object.clientId : '',
-        token: this.object ? this.object.token : '',
-        userFid: this.object ? this.object.userFid : '',
-        active: this.object ? this.object.active : true
-      }
-    },
-    methods: {
-      save() {
-        this.$emit('save-token', { id: this.id, clientId: this.clientId, token: this.token, userFid: this.userFid, active: this.active })
-        if (!this.id) {
-          this.clientId = ''
-          this.token = ''
-          this.userFid = ''
-        }
-      }
-    },
-    template: `
-      <form class="form" @submit.prevent="save">
-        <h3 class='subtitle'>{{ head }}</h3>
-        <div class="field">
-            <label>Pardot User Id</label>
-            <div class="control">
-              <input class="input" type="text" v-model="clientId">
-            </div> 
-        </div>
-        <div class="field">
-            <label>Token</label>
-            <div class="control">
-              <input class="input" type="text" v-model="token">
-            </div> 
-        </div>
-        <div class="field">
-            <label>Salesforce User Id</label>
-            <div class="control">
-              <input class="input" type="text" v-model="userFid">
-            </div> 
-        </div>
-        <div class="field">
-            <div class="control">
-              Token Active : 
-              <input class="checkbox" type="checkbox" v-model="active"> 
-            </div> 
-        </div>
-        <div class="field">
-            <div class="control">
-              <button class="button is-success">Save</button>
-            </div> 
-        </div>
-      </form>
-    `
-  }
-
-  const Token = {
-    props: ['token'],
-    components: { 'add-update-token': AddUpdateToken },
-    data () {
-      return {
-        showDetail: false
-      }
-    },
-    methods: {
-      onAddOrUpdateToken(token) {
-        this.$emit('save-token', token)
-      },
-      deleteToken (token) {
-        this.$emit('delete-token', token)
-      }
-    },
-    template: `
-      <div class="card">
-        <header class="card-header">
-          <p @click="showDetail = !showDetail" class="card-header-title">
-            <span class="icon-text">
-              <span>{{ token.token }}</span>
-              <span  v-show="!showDetail"  class="icon">
-                <i v-if="token.active" class="fa fa-check-square"></i>
-                <i v-else class="fa fa-xing-square"></i>
-              </span>
-            </span>
-          </p>
-          <a class="card-header-icon" @click.stop="deleteToken(token)">
-            <span class="icon">
-              <i class="fa fa-trash"></i>
-            </span>
-          </a>
-        </header>
-        <div v-show="showDetail" class="card-content">
-            <add-update-token head="Details" :object="token" @save-token="onAddOrUpdateToken" />
-        </div>
-      </div>
-    `
-  }
-
-  new Vue({
-    el: '#app',
-    components: { token: Token, 'add-update-token': AddUpdateToken },
-    data: {
-      tokens: [],
-      apiURL: '/api/tokens'
-    },
-    methods: {
-      increment() {
-        this.count++;
-        console.log(count);
-      },
-      onAddOrUpdateToken (token) {
-        if (token.id) {
-          this.updateToken(token)
-        } else {
-          this.addToken(token)
-        }
-      },
-      addToken (token) {
-        return axios.post(this.apiURL, token)
-          .then((response) => {
-            const copy = this.tokens.slice()
-            copy.push(response.data)
-            this.tokens = copy
-          })
-      },
-      updateToken (token) {
-        return axios.put(`${this.apiURL}/${token.id}`, token)
-          .then((response) => {
-            const copy = this.tokens.slice()
-            const idx = copy.findIndex((c) => c.id === response.data.id)
-            copy[idx] = response.data
-            this.tokens = copy
-          })
-      },
-      deleteToken (token) {
-        console.log('deleting', token)
-        return axios.delete(`${this.apiURL}/${token.id}`)
-          .then((response) => {
-            let copy = this.tokens.slice()
-            const idx = copy.findIndex((c) => c.id === token.id)
-            copy.splice(idx, 1)
-            this.tokens = copy
-          })
-      }
-    },
-    beforeMount () {
-      axios.get(this.apiURL)
-        .then((response) => {
-          this.tokens = response.data
-        })
-    }
-  })
-
-//   document.addEventListener('DOMContentLoaded', () => {
-//   (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
-//     const $notification = $delete.parentNode;
-
-//     $delete.addEventListener('click', () => {
-//       $notification.parentNode.removeChild($notification);
-//     });
-//   });
-// });
-  </script>
+  <script type="text/javascript" src="js/app.js"></script>
 </body>
 </html>
