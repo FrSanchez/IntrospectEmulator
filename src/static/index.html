@@ -23,32 +23,33 @@
   <div id="app" class="container">
     <section class="section section-container" style="padding-top: 24px; padding-bottom: 5px;">
         <div class="notification is-info">
+          <button class="delete"></button>
               This is a user-friendly implementation, but don't expect any error handling. 
               If you think this should be extended, please feel free to add a PR in the repo. 
         </div>
         <h2 class="title">Tokens</h2>
-        <contact v-for="token in tokens"
+        <token v-for="token in tokens"
             :key="token.id"
-            :contact="token"
+            :token="token"
             @save-token="onAddOrUpdateToken" 
             @delete-token="deleteToken" />
     </section>
     <section class="section section-container" style="padding-bottom: 10px;">
       <div class="box">
-        <add-update-token title="Add Token" @save-token="onAddOrUpdateToken" />
+        <add-update-token head="Add Token" @save-token="onAddOrUpdateToken" />
       </div>
     </section>
   </div>
   <script>
   const AddUpdateToken = {
-    props: ['contact', 'title'],
+    props: ['object', 'head'],
     data () {
       return {
-        id: this.contact ? this.contact.id : null,
-        clientId: this.contact ? this.contact.clientId : '',
-        token: this.contact ? this.contact.token : '',
-        userFid: this.contact ? this.contact.userFid : '',
-        active: this.contact ? this.contact.active : true
+        id: this.object ? this.object.id : null,
+        clientId: this.object ? this.object.clientId : '',
+        token: this.object ? this.object.token : '',
+        userFid: this.object ? this.object.userFid : '',
+        active: this.object ? this.object.active : true
       }
     },
     methods: {
@@ -63,7 +64,7 @@
     },
     template: `
       <form class="form" @submit.prevent="save">
-        <h3 class='subtitle'>{{ title }}</h3>
+        <h3 class='subtitle'>{{ head }}</h3>
         <div class="field">
             <label>Pardot User Id</label>
             <div class="control">
@@ -98,7 +99,7 @@
   }
 
   const Token = {
-    props: ['contact'],
+    props: ['token'],
     components: { 'add-update-token': AddUpdateToken },
     data () {
       return {
@@ -106,11 +107,11 @@
       }
     },
     methods: {
-      onAddOrUpdateToken(contact) {
-        this.$emit('save-token', contact)
+      onAddOrUpdateToken(token) {
+        this.$emit('save-token', token)
       },
-      deleteToken (contact) {
-        this.$emit('delete-token', contact)
+      deleteToken (token) {
+        this.$emit('delete-token', token)
       }
     },
     template: `
@@ -118,21 +119,21 @@
         <header class="card-header">
           <p @click="showDetail = !showDetail" class="card-header-title">
             <span class="icon-text">
-              <span>{{ contact.token }}</span>
+              <span>{{ token.token }}</span>
               <span  v-show="!showDetail"  class="icon">
-                <i v-if="contact.active" class="fa fa-check-square"></i>
+                <i v-if="token.active" class="fa fa-check-square"></i>
                 <i v-else class="fa fa-xing-square"></i>
               </span>
             </span>
           </p>
-          <a class="card-header-icon" @click.stop="deleteToken(contact)">
+          <a class="card-header-icon" @click.stop="deleteToken(token)">
             <span class="icon">
               <i class="fa fa-trash"></i>
             </span>
           </a>
         </header>
         <div v-show="showDetail" class="card-content">
-            <add-update-token title="Details" :contact="contact" @save-token="onAddOrUpdateToken" />
+            <add-update-token head="Details" :object="token" @save-token="onAddOrUpdateToken" />
         </div>
       </div>
     `
@@ -140,29 +141,33 @@
 
   new Vue({
     el: '#app',
-    components: { contact: Token, 'add-update-token': AddUpdateToken },
+    components: { token: Token, 'add-update-token': AddUpdateToken },
     data: {
       tokens: [],
       apiURL: '/api/tokens'
     },
     methods: {
-      onAddOrUpdateToken (contact) {
-        if (contact.id) {
-          this.updateToken(contact)
+      increment() {
+        this.count++;
+        console.log(count);
+      },
+      onAddOrUpdateToken (token) {
+        if (token.id) {
+          this.updateToken(token)
         } else {
-          this.addToken(contact)
+          this.addToken(token)
         }
       },
-      addToken (contact) {
-        return axios.post(this.apiURL, contact)
+      addToken (token) {
+        return axios.post(this.apiURL, token)
           .then((response) => {
             const copy = this.tokens.slice()
             copy.push(response.data)
             this.tokens = copy
           })
       },
-      updateToken (contact) {
-        return axios.put(`${this.apiURL}/${contact.id}`, contact)
+      updateToken (token) {
+        return axios.put(`${this.apiURL}/${token.id}`, token)
           .then((response) => {
             const copy = this.tokens.slice()
             const idx = copy.findIndex((c) => c.id === response.data.id)
@@ -170,12 +175,12 @@
             this.tokens = copy
           })
       },
-      deleteToken (contact) {
-        console.log('deleting', contact)
-        return axios.delete(`${this.apiURL}/${contact.id}`)
+      deleteToken (token) {
+        console.log('deleting', token)
+        return axios.delete(`${this.apiURL}/${token.id}`)
           .then((response) => {
             let copy = this.tokens.slice()
-            const idx = copy.findIndex((c) => c.id === contact.id)
+            const idx = copy.findIndex((c) => c.id === token.id)
             copy.splice(idx, 1)
             this.tokens = copy
           })
@@ -189,6 +194,15 @@
     }
   })
 
+//   document.addEventListener('DOMContentLoaded', () => {
+//   (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
+//     const $notification = $delete.parentNode;
+
+//     $delete.addEventListener('click', () => {
+//       $notification.parentNode.removeChild($notification);
+//     });
+//   });
+// });
   </script>
 </body>
 </html>
