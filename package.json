@@ -26,9 +26,9 @@
     "@babel/preset-env": "^7.19.0",
     "eslint": "^8.23.0",
     "jest": "^29.0.2",
-    "mocha": "^10.0.0",
-    "chai": "^4.3.6",
-    "chai-http": "^4.3.0"
+    "mocha": "*",
+    "chai": "*",
+    "chai-http": "*"
   },
   "dependencies": {
     "nodemon": "^2.0.19",
