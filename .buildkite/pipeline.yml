@@ -30,6 +30,7 @@ steps:
   - wait
 
   - label: ":docker: Pushing base image for IntrospectEmulator"
+    branches: "main"
     plugins:
       - ${DOCKER_COMPOSE_PLUGIN}:
           push:
