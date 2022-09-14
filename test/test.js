@@ -60,25 +60,6 @@ describe("Tokens", function(){
                 })      
         })
 
-        it ("Should update one token", (done)=>{
-            const token = {
-                clientId: 200,
-                token: "Token200",
-                active: false
-            }
-            chai.request(server)
-                .put('/api/tokens/1')
-                .send(token)
-                .end((err, result)=>{
-                    result.should.have.status(200);
-                    const srvToken = result.body
-                    assert.equal(srvToken.clientId, token.clientId)
-                    assert.equal(srvToken.token, token.token)
-                    assert.equal(srvToken.active, token.active)
-                    done()
-                })
-        })
-
         it("Should introspect a valid token", (done)=> {
             chai.request(server)
                 .post("/services/oauth2/introspect")
@@ -100,6 +81,25 @@ describe("Tokens", function(){
                 res.should.have.status(404);
                 done();
             })
+        })
+
+        it ("Should update one token", (done)=>{
+            const token = {
+                clientId: 200,
+                token: "Token200",
+                active: false
+            }
+            chai.request(server)
+                .put('/api/tokens/1')
+                .send(token)
+                .end((err, result)=>{
+                    result.should.have.status(200);
+                    const srvToken = result.body
+                    assert.equal(srvToken.clientId, token.clientId)
+                    assert.equal(srvToken.token, token.token)
+                    assert.equal(srvToken.active, token.active)
+                    done()
+                })
         })
     })
 })
