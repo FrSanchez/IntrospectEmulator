@@ -33,7 +33,7 @@ router.get('/:tokenId', (req, res) => {
     });
 });
 
-router.post('/', (req, res, next) => {
+router.post('/', (req, res) => {
     const { clientId, token, userFid, active } = req.body;
     console.log(req.body);
     console.log(token, userFid);
