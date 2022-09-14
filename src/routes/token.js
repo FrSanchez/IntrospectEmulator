@@ -35,8 +35,6 @@ router.get('/:tokenId', (req, res) => {
 
 router.post('/', (req, res) => {
     const { clientId, token, userFid, active } = req.body;
-    console.log(req.body);
-    console.log(token, userFid);
     return req.context.db.Token.findAndCountAll({
         where: {
             [Op.or]: [

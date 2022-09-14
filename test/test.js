@@ -11,69 +11,50 @@ describe("Tokens", function(){
 
     describe ("CRUD OPERATIONS", function(){
 
-        var tokens = [{
-            clientId: 591,
-            token: "Token591",
-            userFid: "005xx000Cust013c00",
-            active: true
-        }, {
-            clientId: 195,
-            token: "Token195",
-            userFid: "005xx000Cust013c00",
-            active: true
-        }]
-
-        it("Should delete all tokens", (done) => {
+        var token1 = 0;
+        it("Should add a token into DB", (done) => {
+            const token = { 
+                clientId: 201,
+                token: "CustomToken201", 
+                userFid: "005xx000Cust023d00"};
             chai.request(server)
-            .delete("/api/tokens")
-            .end((err,res) => {
-                console.log(res.body);
-                done();
-            });
-        })
-
-        it("Should add Tokens in DB", (done) => {
-            tokens.forEach(function(token) {
-                chai.request(server)
                 .post("/api/tokens/")
                 .send(token)
                 .end((err, res) => {
                     res.should.have.status(200);
-                })
-            });
-            done();
+                    done();
+                });
         })
 
-        // it ("Should Fecth all the tokens", (done)=>{
-        //     chai.request(server)
-        //         .get("/api/tokens/")
-        //         .end((err, result)=>{
-        //             result.should.have.status(200);
-        //             const tokens = result.body;
-        //             assert.equal(tokens.length, 2);
-        //             for(var i = 0; i < 2; i++) {
-        //                 assert.equal(tokens[i].clientId, tokens[i].clientId)
-        //             }
-        //             done()
-        //         })
-        // })
+        it ("Should Fecth all the tokens", (done)=>{
+            chai.request(server)
+                .get("/api/tokens/")
+                .end((err, result)=>{
+                    result.should.have.status(200);
+                    const tokens = result.body;
+                    console.log('Received tokens ', tokens);
+                    assert.equal(tokens.length, 4);
+                    token1 = tokens[0].id;
+                    done()
+                })
+        })
 
-        // it("should fetch one token", (done)=>{
-        //     chai.request(server)
-        //         .get("/api/tokens/1")
-        //         .end((err, result)=>{
-        //             result.should.have.status(200);
-        //             const token = result.body;
-        //             assert.equal(true, token.clientId == tokens[0].clientId || token.clientId == tokens[1].clientId)
-        //             done()
-        //         })      
-        // })
+        it("should fetch one token", (done)=>{
+            chai.request(server)
+                .get(`/api/tokens/${token1}`)
+                .end((err, result)=>{
+                    result.should.have.status(200);
+                    const token = result.body;
+                    assert.equal(token.active, true);
+                    done()
+                })      
+        })
 
         it("Should introspect a valid token", (done)=> {
             chai.request(server)
                 .post("/services/oauth2/introspect")
                 .type('application/x-www-form-urlencoded')
-                .send(`token=${tokens[0].token}`)
+                .send('token=CustomToken101') // from seed
                 .end((err, res) => {
                     res.should.have.status(200);
                     assert.equal(res.body.active, true);
@@ -99,7 +80,7 @@ describe("Tokens", function(){
                 active: false
             }
             chai.request(server)
-                .put('/api/tokens/1')
+                .put(`/api/tokens/${token1}`)
                 .send(token)
                 .end((err, result)=>{
                     result.should.have.status(200);

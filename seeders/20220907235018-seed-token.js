@@ -12,21 +12,24 @@ module.exports = {
      * }], {});
     */
      return queryInterface.bulkInsert('Tokens', [{ 
-      clientId: 1,
-      token: "CustomToken1", 
+      clientId: 101,
+      token: "CustomToken101", 
       userFid: "005xx000Cust013c00",
+      active: true,
       createdAt: new Date().toDateString(),
       updatedAt: new Date().toDateString()
     }, {
-      clientId: 2,
-      token: "CustomToken2", 
+      clientId: 102,
+      token: "CustomToken102",
       userFid: "005xx000Custf57ac5",
+      active: true,
       createdAt: new Date().toDateString(),
       updatedAt: new Date().toDateString()
     }, {
-      clientId: 3,
-      token: "CustomToken3", 
+      clientId: 103,
+      token: "CustomToken103", 
       userFid: "005xx000Cust0d268c",
+      active: false,
       createdAt: new Date().toDateString(),
       updatedAt: new Date().toDateString()
     }], {});
