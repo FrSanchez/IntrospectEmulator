@@ -35,19 +35,19 @@ describe("Tokens", function(){
             done();
         })
 
-        it ("Should Fecth all the tokens", (done)=>{
-            chai.request(server)
-                .get("/api/tokens/")
-                .end((err, result)=>{
-                    result.should.have.status(200);
-                    const tokens = result.body;
-                    assert.equal(tokens.length, 2);
-                    for(var i = 0; i < 2; i++) {
-                        assert.equal(tokens[i].clientId, tokens[i].clientId)
-                    }
-                    done()
-                })
-        })
+        // it ("Should Fecth all the tokens", (done)=>{
+        //     chai.request(server)
+        //         .get("/api/tokens/")
+        //         .end((err, result)=>{
+        //             result.should.have.status(200);
+        //             const tokens = result.body;
+        //             assert.equal(tokens.length, 2);
+        //             for(var i = 0; i < 2; i++) {
+        //                 assert.equal(tokens[i].clientId, tokens[i].clientId)
+        //             }
+        //             done()
+        //         })
+        // })
 
         it("should fetch one token", (done)=>{
             chai.request(server)
