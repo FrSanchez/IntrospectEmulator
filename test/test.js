@@ -23,6 +23,15 @@ describe("Tokens", function(){
             active: true
         }]
 
+        it("Should delete all tokens", (done) => {
+            chai.request(server)
+            .delete("/api/tokens")
+            .end((err,res) => {
+                console.log(res.body);
+                done();
+            });
+        })
+
         it("Should add Tokens in DB", (done) => {
             tokens.forEach(function(token) {
                 chai.request(server)
