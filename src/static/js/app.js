@@ -97,6 +97,7 @@
     `
   }
 
+  Vue.use(window['vue-easy-toast'].default)
   new Vue({
     el: '#app',
     components: { token: Token, 'add-update-token': AddUpdateToken },
@@ -107,7 +108,7 @@
       notification: true
     },
     methods: {
-        onClick() {
+      onClick() {
         this.notification = false;
       },
       onAddOrUpdateToken (token) {
@@ -120,10 +121,13 @@
       addToken (token) {
         return axios.post(this.apiURL, token)
           .then((response) => {
+            console.log(response);
             const copy = this.tokens.slice()
             copy.push(response.data)
             this.tokens = copy
-          })
+        }).catch((error)=>{
+            this.toast(error.response.data)
+          });
       },
       updateToken (token) {
         return axios.put(`${this.apiURL}/${token.id}`, token)
@@ -132,7 +136,9 @@
             const idx = copy.findIndex((c) => c.id === response.data.id)
             copy[idx] = response.data
             this.tokens = copy
-          })
+          }).catch((error)=>{
+            console.log(error);
+          });
       },
       deleteToken (token) {
         console.log('deleting', token)
@@ -143,7 +149,20 @@
             copy.splice(idx, 1)
             this.tokens = copy
           })
-      }
+      },
+      onApiError() {
+        this.showApiError = true;
+      },
+      toast(message) {
+        this.$toast(message, {
+            mode: 'override',
+            closeable: true,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            defaultTransition: 'fade',
+            className: ['is-warning','notification'],
+            })
+    },
     },
     beforeMount () {
       axios.get(this.apiURL)

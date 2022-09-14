@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { Op } from 'sequelize';
 
 const router = Router();
 
@@ -34,9 +35,30 @@ router.get('/:tokenId', (req, res) => {
 
 router.post('/', (req, res, next) => {
     const { clientId, token, userFid, active } = req.body;
-    return req.context.db.Token.create({clientId: clientId, token: token, userFid: userFid , active: active})
-    .then((token) => res.send(token))
-    .catch(next)
+    console.log(req.body);
+    console.log(token, userFid);
+    return req.context.db.Token.findAndCountAll({
+        where: {
+            [Op.or]: [
+                { token: req.body.token },
+                { userFid: req.body.userFid }
+            ]
+        }
+    }).then((data)=> {
+        if (data.count > 0) {
+            res.status(400).send({err: 101, message: "Duplicate values found"});
+        } else {
+            return req.context.db.Token.create({clientId: clientId, token: token, userFid: userFid , active: active})
+            .then((token) => res.send(token))
+            .catch((err) => {
+                console.log(err.name, '***Error inserting token', JSON.stringify(err))
+                res.status(400).send(err)
+            })        
+        }
+    })
+    .catch(err=>{
+        console.log("**Findall error => ", err);
+    });
 });
 
 router.put('/:id', (req, res) => {
