@@ -49,16 +49,16 @@ describe("Tokens", function(){
         //         })
         // })
 
-        it("should fetch one token", (done)=>{
-            chai.request(server)
-                .get("/api/tokens/1")
-                .end((err, result)=>{
-                    result.should.have.status(200);
-                    const token = result.body;
-                    assert.equal(true, token.clientId == tokens[0].clientId || token.clientId == tokens[1].clientId)
-                    done()
-                })      
-        })
+        // it("should fetch one token", (done)=>{
+        //     chai.request(server)
+        //         .get("/api/tokens/1")
+        //         .end((err, result)=>{
+        //             result.should.have.status(200);
+        //             const token = result.body;
+        //             assert.equal(true, token.clientId == tokens[0].clientId || token.clientId == tokens[1].clientId)
+        //             done()
+        //         })      
+        // })
 
         it("Should introspect a valid token", (done)=> {
             chai.request(server)
